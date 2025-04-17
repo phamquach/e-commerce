@@ -1,8 +1,8 @@
 {
     "development": {
         "username": "root",
-        "password": "Quach10052005",
-        "database": "SkyShop",
+        "password": "your password",
+        "database": "your database name",
         "host": "127.0.0.1",
         "dialect": "mysql"
     },
