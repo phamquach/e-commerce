@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
-import db from "../models/index.js";
 import { hashPassword } from "../lib/index.js";
+import userRepository from "../repositories/users-repositories.js";
 
 export function getAllUsers() {
   return new Promise(async (resolve, reject) => {
@@ -75,6 +75,7 @@ export function createUser(userData) {
 
       const hash_password = await hashPassword(userData.password);
       userData.password = hash_password;
+      userData.role = userData.role.toUpperCase();
       const user = await db.Users.create(userData);
       if (user) {
         result.status = 201;

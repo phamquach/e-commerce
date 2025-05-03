@@ -82,6 +82,16 @@ export function loginService(userEmail, password, userToken) {
         return;
       }
 
+      if (user.token) {
+        const decoded = jwt.verify(user.token, process.env.JWT_SECRET);
+        if (decoded.email === userEmail) {
+          result.status = 404;
+          result.message = "User is logged in elsewhere, please log out";
+          resolve(result);
+          return;
+        }
+      }
+
       delete user.verifiedTime;
       delete user.verifiedCode;
       delete user.isVerified;
@@ -126,23 +136,12 @@ export function registerService(userData) {
         reject(result);
         return;
       }
-      // send email verification
-      const code = uuidv4();
-      transport.sendMail(mailOptions(userData.email, code), (error, info) => {
-        if (error) {
-          console.error("Error sending email:", error);
-          result.status = 500;
-          result.message = "Internal server error";
-          reject(result);
-          return;
-        } else {
-          console.log("Email sent:", info.response);
-        }
-      });
+
       delete userData?.isVerified;
       delete userData?.verifiedTime;
       delete userData?.verifiedCode;
 
+      const code = uuidv4();
       const hashedPassword = await hashPassword(userData.password);
       const newUser = await db.Users.create({
         ...userData,
@@ -155,6 +154,18 @@ export function registerService(userData) {
       result.message = "User created successfully";
       delete newUser.dataValues.password;
       result.data = newUser;
+      // send email verification
+      transport.sendMail(mailOptions(userData.email, code), (error, info) => {
+        if (error) {
+          console.error("Error sending email:", error);
+          result.status = 500;
+          result.message = "Internal server error";
+          reject(result);
+          return;
+        } else {
+          console.log("Email sent:", info.response);
+        }
+      });
       resolve(result);
     } catch (error) {
       console.error("Error in registerService:", error.message);
@@ -165,7 +176,7 @@ export function registerService(userData) {
     }
   });
 }
-export function logoutService(token){
+export function logoutService(token) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
@@ -205,7 +216,7 @@ export function logoutService(token){
       reject(result);
     }
   });
-} 
+}
 export function checkVerifiedUser(verifiedCode, userEmail) {
   return new Promise(async (resolve, reject) => {
     const result = {};

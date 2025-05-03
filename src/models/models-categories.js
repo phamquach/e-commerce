@@ -20,6 +20,9 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
       },
+      img: {
+        type: DataTypes.TEXT,
+      },
     },
     {
       sequelize,

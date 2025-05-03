@@ -4,19 +4,6 @@ import db from "../models/index.js";
 dotenv.config();
 export const checkCookies = async (req, res, next) => {
   const token = req.cookies.token;
-  const pathName = req.path;
-  const excludedPaths = [
-    "/api",
-    "/api/auth/login",
-    "/api/auth/register",
-    "/api/auth/verify-email",
-    "/api/auth/logout",
-    "/api/auth/refresh-token",
-    "/api/auth/check-token",
-  ];
-  if (excludedPaths.includes(pathName)) {
-    return next();
-  }
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token found" });
   }
