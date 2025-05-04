@@ -1,9 +1,9 @@
-import categoriesRepository from "../repositories/categories-repositories.js";
-export function getAllCategories() {
+import CategoriesRepository from "../repositories/categories-repositories.js";
+export function getAllCategories(condition) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const categories = await categoriesRepository.findAll();
+      const categories = await CategoriesRepository.findAll(condition);
       if (!categories) {
         result.status = 404;
         result.message = "No categories found";
@@ -27,7 +27,7 @@ export function getCategoryById(categoryId) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const category = await categoriesRepository.findOne(categoryId);
+      const category = await CategoriesRepository.findOne(categoryId);
       if (!category) {
         result.status = 404;
         result.message = "Category not found";
@@ -51,7 +51,7 @@ export function createCategory(categoryData) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const existingCategory = await categoriesRepository.findOne(
+      const existingCategory = await CategoriesRepository.findOne(
         categoryData.categoryId
       );
       if (existingCategory) {
@@ -60,7 +60,7 @@ export function createCategory(categoryData) {
         return resolve(result);
       }
 
-      const newCategory = await categoriesRepository.create(categoryData);
+      const newCategory = await CategoriesRepository.create(categoryData);
       if (!newCategory) {
         result.status = 400;
         result.message = "Failed to create category";
@@ -84,7 +84,7 @@ export function updateCategory(categoryData) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const category = await categoriesRepository.findOne(
+      const category = await CategoriesRepository.findOne(
         categoryData.categoryId
       );
       if (!category) {
@@ -93,7 +93,7 @@ export function updateCategory(categoryData) {
         return resolve(result);
       }
 
-      await categoriesRepository.update(categoryData);
+      await CategoriesRepository.update(categoryData);
       result.status = 200;
       result.message = "Category updated successfully";
       resolve(result);
@@ -110,14 +110,14 @@ export function deleteCategory(categoryId) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const category = await categoriesRepository.findOne(categoryId);
+      const category = await CategoriesRepository.findOne(categoryId);
       if (!category) {
         result.status = 404;
         result.message = "Category not found";
         return reject(result);
       }
 
-      await categoriesRepository.delete(categoryId);
+      await CategoriesRepository.delete(categoryId);
       result.status = 200;
       result.message = "Category deleted successfully";
       resolve(result);

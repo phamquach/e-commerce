@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { hashPassword } from "../lib/index.js";
-import userRepository from "../repositories/users-repositories.js";
+import UserRepository from "../repositories/users-repositories.js";
 
 export function getAllUsers() {
   return new Promise(async (resolve, reject) => {

@@ -1,9 +1,13 @@
 // CATEGORY CONTROLLER
+import { Op } from "sequelize";
 import * as categoryService from "../services/CRUD-service-category.js";
 
-export async function getAllCategories(req, res) {
+export async function getCategories(req, res) {
+  const categoryId = req.query.id;
   try {
-    const categories = await categoryService.getAllCategories();
+    const categories = await categoryService.getAllCategories({
+      categoryId: categoryId ? categoryId : { [Op.ne]: "" },
+    });
     res.status(categories.status).json({
       message: categories.message,
       data: categories.data,
@@ -15,21 +19,7 @@ export async function getAllCategories(req, res) {
     });
   }
 }
-export async function getCategoryById(req, res) {
-  const categoryId = req.params.id;
-  try {
-    const category = await categoryService.getCategoryById(categoryId);
-    res.status(category.status).json({
-      message: category.message,
-      data: category.data,
-    });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
-}
+
 export async function createCategory(req, res) {
   try {
     const categoryData = req.body;

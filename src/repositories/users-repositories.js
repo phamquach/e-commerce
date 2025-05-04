@@ -1,4 +1,4 @@
-const userRepository = {
+const UserRepository = {
   findAll: async () => {
     return await db.Users.findAll({
       attributes: { exclude: ["password"] },
@@ -27,4 +27,4 @@ const userRepository = {
   },
 };
 
-export default userRepository;
+export default UserRepository;
