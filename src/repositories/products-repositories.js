@@ -2,15 +2,11 @@ import db from "../models/index.js";
 
 const ProductsRepository = {
   findAll: async (condition) => {
-    return await db.Products.findAll({
-      where: condition,
-    });
+    return await db.Products.findAll(condition);
   },
 
   findOne: async (condition) => {
-    return await db.Products.findOne({
-      where: condition,
-    });
+    return await db.Products.findOne(condition);
   },
 
   create: async (productData) => {

@@ -80,6 +80,7 @@ export async function checkToken(req, res) {
       data: result.data,
     });
   } catch (error) {
+    res.clearCookie("token");
     res.status(error.status).json({
       message: error.message,
       data: error.data || null,

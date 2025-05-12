@@ -29,7 +29,7 @@ export function getProductById(productId) {
     let result = {};
     try {
       const product = await ProductsRepository.findOne({
-        productId,
+        where: { productId },
       });
       if (!product) {
         result.status = 404;
@@ -55,7 +55,7 @@ export function getProductByCategories(categoryId) {
     let result = {};
     try {
       const product = await ProductsRepository.findAll({
-        categoryId,
+        where: { categoryId },
       });
       if (!product) {
         result.status = 404;
@@ -81,7 +81,7 @@ export function createProduct(productData) {
     let result = {};
     try {
       const existingProduct = await ProductsRepository.findOne({
-        name: productData.name,
+        where: { name: productData.name },
       });
       console.log("Check: ", existingProduct);
       if (existingProduct) {
@@ -114,7 +114,7 @@ export function updateProduct(productData) {
   return new Promise(async (resolve, reject) => {
     let result = {};
     try {
-      const product = await db.Products.findOne({
+      const product = await ProductsRepository.findOne({
         where: { productId: productData.productId },
       });
       if (!product) {
@@ -142,7 +142,9 @@ export async function deleteProduct(productId) {
   return new Promise(async (resolve, reject) => {
     let result = {};
     try {
-      const product = await ProductsRepository.findOne({ productId });
+      const product = await ProductsRepository.findOne({
+        where: { productId },
+      });
       if (!product) {
         result.status = 404;
         result.message = "Product not found";

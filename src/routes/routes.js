@@ -10,11 +10,14 @@ export const initWebRoutes = (app) => {
   router.post("/api/auth/verify-email", config.auth.verifyEmail);
   router.get("/api/auth/logout", config.auth.logout);
   router.get("/api/auth/refresh-token", config.auth.refreshToken);
-  router.get("/api/auth/check-token", config.auth.checkToken);
+  router.get("/api/auth/me", config.auth.checkToken);
 
   // -- Product
   router.get("/api/products", config.products.getProducts);
-  router.get("/api/products?id&categoryId", config.products.getProducts);
+  router.get(
+    "/api/products?id&categoryId&preloadStartItem&pageSize",
+    config.products.getProducts
+  );
   router.post(
     "/api/products",
     middleware.checkCookies,

@@ -1,16 +1,25 @@
 // PRODUCT CONTROLLER
-import { Op } from "sequelize";
+import { Op, where } from "sequelize";
 import * as productService from "../services/CRUD-service-product.js";
 
 export async function getProducts(req, res) {
   const categoryId = req.query.categoryId;
   const productId = req.query.id;
+  const preloadStartItem = req.query.preloadStartItem;
+  const pageSize = req.query.pageSize;
   console.log(categoryId, productId);
   try {
-    const products = await productService.getAllProducts({
-      categoryId: categoryId ? categoryId : { [Op.ne]: "" },
-      productId: productId ? productId : { [Op.ne]: "" },
-    });
+    const options = {
+      where: {
+        categoryId: categoryId ? categoryId : { [Op.ne]: "" },
+        productId: productId ? productId : { [Op.ne]: "" },
+      },
+    };
+    if (preloadStartItem && pageSize) {
+      options.limit = parseInt(pageSize);
+      options.offset = parseInt(preloadStartItem);
+    }
+    const products = await productService.getAllProducts(options);
     res.status(products.status).json({
       message: products.message,
       data: products.data,

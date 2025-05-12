@@ -337,7 +337,7 @@ export function checkTokenService(token) {
     } catch (error) {
       console.error("Error in checkTokenService:", error.message);
       result.status = 500;
-      result.message = "Internal server error";
+      result.message = "Invalid token";
       result.data = error.message;
       reject(result);
     }
