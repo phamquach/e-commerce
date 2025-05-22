@@ -10,7 +10,7 @@ export default (sequelize, DataTypes) => {
 
   Users.init(
     {
-      userid: {
+      userId: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
@@ -55,6 +55,9 @@ export default (sequelize, DataTypes) => {
       },
       verifiedCode: {
         type: DataTypes.TEXT,
+      },
+      avt: {
+        type: DataTypes.STRING(255),
       },
       token: {
         type: DataTypes.TEXT,

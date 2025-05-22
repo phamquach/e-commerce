@@ -1,23 +1,19 @@
+import db from "../models/index.js";
 const UserRepository = {
-  findAll: async () => {
-    return await db.Users.findAll({
-      attributes: { exclude: ["password"] },
-    });
+  findAll: async (condition = {}) => {
+    return await db.Users.findAll(condition);
   },
 
-  findOne: async (userId) => {
-    return await db.Users.findOne({
-      where: { userId },
-      attributes: { exclude: ["password"] },
-    });
+  findOne: async (condition = {}) => {
+    return await db.Users.findOne(condition);
   },
 
   create: async (userData) => {
     return await db.Users.create(userData);
   },
 
-  update: async (userId, data) => {
-    return await db.Users.update(data, { where: { userId } });
+  update: async (condition = {}, data) => {
+    return await db.Users.update(data, condition );
   },
 
   delete: async (userId) => {

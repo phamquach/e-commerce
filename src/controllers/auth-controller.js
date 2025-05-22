@@ -11,35 +11,43 @@ export async function login(req, res) {
 
   try {
     const result = await auth.loginService(email, password, token);
-
-    if (result.status === 200 && result.data?.token) {
+    if (Boolean(result.data?.token)) {
       res.cookie("token", result.data.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
-        maxAge: 5 * 60 * 1000, // 5 phút
+        maxAge: 1 * 60 * 60 * 1000, // 1h * 60' * 60s * 1000ms
       });
-      delete result.data.token;
     }
 
     return res.status(result.status).json({
       message: result.message,
-      data: result.data,
+      data: result.data?.user,
     });
   } catch (error) {
+    console.log(error.message);
     res.clearCookie("token");
-    const status = error.status;
-    const message = error.message;
-    return res.status(status).json({
-      message,
-      data: error.data || null,
+    return res.status(error.status).json({
+      message: error.message,
+      data: error.data,
     });
   }
 }
 
 export async function register(req, res) {
+  const { email, password, phoneNumber, firstName, lastName, address } =
+    req.body;
+  const data = {
+    email,
+    password,
+    phoneNumber,
+    firstName,
+    lastName,
+    address,
+  };
+
   try {
-    const result = await auth.registerService(req.body);
+    const result = await auth.registerService(data);
     return res.status(result.status).json({
       message: result.message,
       data: result.data,
@@ -75,6 +83,9 @@ export async function checkToken(req, res) {
   const token = req.cookies.token;
   try {
     const result = await auth.checkTokenService(token);
+    if (result.status >= 400) {
+      res.clearCookie("token");
+    }
     res.status(result.status).json({
       message: result.message,
       data: result.data,

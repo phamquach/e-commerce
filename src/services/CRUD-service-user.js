@@ -6,7 +6,7 @@ export function getAllUsers() {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const users = await db.Users.findAll({
+      const users = await UserRepository.findAll({
         attributes: { exclude: ["password"] },
       });
       if (users) {
@@ -32,7 +32,7 @@ export function getUserById(userId) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const user = await db.Users.findOne({
+      const user = await UserRepository.findOne({
         where: { userId },
         attributes: { exclude: ["password"] },
       });
@@ -59,7 +59,7 @@ export function createUser(userData) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const existingUser = await db.Users.findOne({
+      const existingUser = await UserRepository.findOne({
         where: {
           [Op.or]: [
             { email: userData.email },
@@ -76,7 +76,7 @@ export function createUser(userData) {
       const hash_password = await hashPassword(userData.password);
       userData.password = hash_password;
       userData.role = userData.role.toUpperCase();
-      const user = await db.Users.create(userData);
+      const user = await UserRepository.create(userData);
       if (user) {
         result.status = 201;
         result.message = "User created successfully";
@@ -96,22 +96,33 @@ export function createUser(userData) {
     }
   });
 }
-export function updateUser(userData) {
+export function updateUser(userData, userId) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const user = await db.Users.findOne({
-        where: { userId: userData.userId },
+      const user = await UserRepository.findOne({
+        where: { userId },
+        attributes: {
+          exclude: [
+            "token",
+            "verifiedCode",
+            "verifiedTime",
+            "createdAt",
+            "updatedAt",
+            "password",
+            "isVerified",
+          ],
+        },
       });
       if (!user) {
         result.status = 404;
         result.message = "User not found";
         return reject(result);
       }
-      const existingUser = await db.Users.findOne({
+      const existingUser = await UserRepository.findOne({
         where: {
           [Op.and]: [
-            { userId: { [Op.ne]: userData.userId } },
+            { userId: { [Op.ne]: userId } },
             {
               [Op.or]: [
                 { email: userData.email ?? "" },
@@ -145,7 +156,7 @@ export function deleteUser(userId) {
   return new Promise(async (resolve, reject) => {
     const result = {};
     try {
-      const user = await db.Users.findOne({
+      const user = await UserRepository.findOne({
         where: { userId },
         attributes: { exclude: ["password"] },
       });

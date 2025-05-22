@@ -1,4 +1,5 @@
 // USER CONTROLLER
+import { decodedToken } from "../lib/index.js";
 import * as userService from "../services/CRUD-service-user.js";
 export async function getAllUsers(req, res) {
   try {
@@ -10,7 +11,7 @@ export async function getAllUsers(req, res) {
   } catch (error) {
     res.status(error.status).json({
       error: error.message,
-        data: error.data,
+      data: error.data,
     });
   }
 }
@@ -44,10 +45,28 @@ export async function createUser(req, res) {
     });
   }
 }
-export async function updateUser(req, res) {
+export async function updateUser_Put(req, res) {
+  const userData = req.body;
+  const id = userData.userId;
+  try {
+    const updatedUser = await userService.updateUser(userData, id);
+    res.status(updatedUser.status).json({
+      message: updatedUser.message,
+      data: updatedUser.data,
+    });
+  } catch (error) {
+    res.status(error.status).json({
+      error: error.message,
+      data: error.data,
+    });
+  }
+}
+export async function updateUser_Post(req, res) {
+  const token = req.cookies.token;
   const userData = req.body;
   try {
-    const updatedUser = await userService.updateUser(userData);
+    const data = decodedToken(token);
+    const updatedUser = await userService.updateUser(userData, data.userId);
     res.status(updatedUser.status).json({
       message: updatedUser.message,
       data: updatedUser.data,
