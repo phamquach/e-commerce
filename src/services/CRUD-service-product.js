@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import ProductsRepository from "../repositories/products-repositories.js";
 
 export function getAllProducts(condition) {
@@ -52,7 +53,7 @@ export function getProductById(productId) {
 }
 export function getProductByCategories(categoryId) {
   return new Promise(async () => {
-    let result = {};
+    const result = {};
     try {
       const product = await ProductsRepository.findAll({
         where: { categoryId },
@@ -73,6 +74,32 @@ export function getProductByCategories(categoryId) {
       result.message = "Error fetching product";
       result.data = error.message;
       reject(result);
+    }
+  });
+}
+export function getProductBySearchQuery(search_query) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const products = await ProductsRepository.findAll({
+        where: Sequelize.where(
+          Sequelize.fn("LOWER", Sequelize.col("name")),
+          "LIKE",
+          `%${search_query}%`
+        ),
+      });
+      console.log(products);
+      resolve({
+        status: 200,
+        message: "Success!",
+        data: products,
+      });
+    } catch (error) {
+      console.log("Loi", error.message);
+      reject({
+        status: 500,
+        message: "Error searching products",
+        data: null,
+      });
     }
   });
 }

@@ -14,8 +14,9 @@ export const initWebRoutes = (app) => {
 
   // -- Product
   router.get("/api/products", config.products.getProducts);
+  router.get("/api/product", config.products.getProductsBySearch);
   router.get(
-    "/api/products?id&categoryId&preloadStartItem&pageSize",
+    "/api/products", // /api/products?id&categoryId&preloadStartItem&pageSize
     config.products.getProducts
   );
   router.post(
@@ -69,7 +70,11 @@ export const initWebRoutes = (app) => {
     middleware.checkCookiesAdmin,
     config.orders.createOrder
   );
-  router.put("/api/orders", middleware.checkCookiesAdmin, config.orders.updateOrder);
+  router.put(
+    "/api/orders",
+    middleware.checkCookiesAdmin,
+    config.orders.updateOrder
+  );
   router.delete(
     "/api/orders/:id",
     middleware.checkCookiesAdmin,
@@ -77,15 +82,31 @@ export const initWebRoutes = (app) => {
   );
 
   // User
-  router.post('/api/user-update', middleware.checkCookiesUser, config.users.updateUser_Post);
-  router.get("/api/users", middleware.checkCookiesAdmin, config.users.getAllUsers);
+  router.post(
+    "/api/user-update",
+    middleware.checkCookiesUser,
+    config.users.updateUser_Post
+  );
+  router.get(
+    "/api/users",
+    middleware.checkCookiesAdmin,
+    config.users.getAllUsers
+  );
   router.get(
     "/api/users/:id",
     middleware.checkCookiesAdmin,
     config.users.getUserById
   );
-  router.post("/api/users", middleware.checkCookiesAdmin, config.users.createUser);
-  router.put("/api/users", middleware.checkCookiesAdmin, config.users.updateUser_Put);
+  router.post(
+    "/api/users",
+    middleware.checkCookiesAdmin,
+    config.users.createUser
+  );
+  router.put(
+    "/api/users",
+    middleware.checkCookiesAdmin,
+    config.users.updateUser_Put
+  );
   router.delete(
     "/api/users/:id",
     middleware.checkCookiesAdmin,
