@@ -2,34 +2,34 @@
 import { Model } from "sequelize";
 
 export default (sequelize, DataTypes) => {
-  class Categories extends Model {
+  class Carts extends Model {
     static associate(models) {
       // Định nghĩa associations nếu cần
     }
   }
 
-  Categories.init(
+  Carts.init(
     {
-      categoryId: {
+      cartId: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING(255),
+      userId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        unique: true,
-      },
-      image: {
-        type: DataTypes.TEXT,
+        references: {
+          model: "users",
+          key: "userId",
+        },
       },
     },
     {
       sequelize,
-      modelName: "Categories",
-      tableName: "Categories",
+      modelName: "Carts",
+      tableName: "Carts",
     }
   );
 
-  return Categories;
+  return Carts;
 };

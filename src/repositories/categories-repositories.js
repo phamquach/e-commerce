@@ -2,15 +2,11 @@ import db from "../models/index.js";
 
 const CategoriesRepository = {
   findAll: async (condition) => {
-    return await db.Categories.findAll({
-      where: condition,
-    });
+    return await db.Categories.findAll(condition);
   },
 
-  findOne: async (categoryId) => {
-    return await db.Categories.findOne({
-      where: { categoryId },
-    });
+  findOne: async (condition) => {
+    return await db.Categories.findOne(condition);
   },
 
   create: async (categoryData) => {

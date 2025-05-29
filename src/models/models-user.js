@@ -56,7 +56,7 @@ export default (sequelize, DataTypes) => {
       verifiedCode: {
         type: DataTypes.TEXT,
       },
-      avt: {
+      avatar: {
         type: DataTypes.STRING(255),
       },
       token: {

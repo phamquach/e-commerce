@@ -1,95 +1,49 @@
 // USER CONTROLLER
-import { decodedToken } from "../lib/index.js";
-import * as userService from "../services/CRUD-service-user.js";
+import ReadUser from "../services/CRUD/Read/read-user.js";
+import CreateUser from "../services/CRUD/Create/create-user.js";
+import UpdateUser from "../services/CRUD/Update/update-user.js";
+import DeleteUser from "../services/CRUD/Delete/delete-user.js";
+
 export async function getAllUsers(req, res) {
-  try {
-    const users = await userService.getAllUsers();
-    res.status(users.status).json({
-      message: users.message,
-      data: users.data,
+    const pageNumber = parseInt(req.query.pageNumber);
+    const pageSize = parseInt(req.query.pageSize);
+
+    const { data, message, status } = await ReadUser.getAllUsers(pageNumber, pageSize);
+    res.status(status).json({
+        message,
+        data,
     });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
 }
 export async function getUserById(req, res) {
-  const userId = req.params.id;
-  try {
-    const user = await userService.getUserById(userId);
-    res.status(user.status).json({
-      message: user.message,
-      data: user.data,
+    const userId = req.params.id;
+    const { data, message, status } = await ReadUser.getOneUse(userId);
+    res.status(status).json({
+        message,
+        data,
     });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
 }
 export async function createUser(req, res) {
-  try {
     const userData = req.body;
-    const newUser = await userService.createUser(userData);
-    res.status(newUser.status).json({
-      message: newUser.message,
-      data: newUser.data,
+    const { data, message, status } = await CreateUser(userData);
+    res.status(status).json({
+        message,
+        data,
     });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
 }
-export async function updateUser_Put(req, res) {
-  const userData = req.body;
-  const id = userData.userId;
-  try {
-    const updatedUser = await userService.updateUser(userData, id);
-    res.status(updatedUser.status).json({
-      message: updatedUser.message,
-      data: updatedUser.data,
+export async function updateUser(req, res) {
+    const userData = req.body;
+    const id = userData.userId;
+    const { data, message, status } = await UpdateUser(userData, id);
+    res.status(status).json({
+        message,
+        data,
     });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
-}
-export async function updateUser_Post(req, res) {
-  const token = req.cookies.token;
-  const userData = req.body;
-  try {
-    const data = decodedToken(token);
-    const updatedUser = await userService.updateUser(userData, data.userId);
-    res.status(updatedUser.status).json({
-      message: updatedUser.message,
-      data: updatedUser.data,
-    });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
 }
 export async function deleteUser(req, res) {
-  const userId = req.params.id;
-  try {
-    const deletedUser = await userService.deleteUser(userId);
-    res.status(deletedUser.status).json({
-      message: deletedUser.message,
-      data: deletedUser.data,
+    const userId = req.params.id;
+    const { data, message, status } = await DeleteUser(userId);
+    res.status(status).json({
+        message,
+        data,
     });
-  } catch (error) {
-    res.status(error.status).json({
-      error: error.message,
-      data: error.data,
-    });
-  }
 }
