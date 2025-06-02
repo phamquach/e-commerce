@@ -13,7 +13,7 @@ export async function getProductsById(req, res) {
     });
 }
 export async function getProductByQuery(req, res) {
-    const searchQuery = req.query.search_q;
+    const searchQuery = decodeURIComponent(req.query.search_q);
     const categoryId = req.query.categoryId;
     const pageSize = parseInt(req.query.pageSize);
     const pageNumber = parseInt(req.query.pageNumber);
@@ -43,7 +43,7 @@ export async function updateProduct(req, res) {
 }
 export async function deleteProduct(req, res) {
     const productId = req.params.id;
-    const {status, message, data } = await DeleteProduct(productId);
+    const { status, message, data } = await DeleteProduct(productId);
     res.status(status).json({
         message,
         data,
