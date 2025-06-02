@@ -4,7 +4,7 @@ export default async function UpdateProduct(categoryId, newCategoryData) {
     try {
         // Check product in database
         const isCategory = await ReadCategory.getOneCategory(categoryId);
-        if (!Boolean(isCategory.data)) {
+        if (!isCategory.data) {
             return isCategory;
         }
 

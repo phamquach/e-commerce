@@ -4,7 +4,7 @@ export default async function UpdateUser(newUserData = {}, userId = 0) {
     try {
         // Find user in database
         const isUser = await ReadUser.getOneUse(userId);
-        if (!Boolean(isUser.data)) {
+        if (!isUser.data) {
             return isUser;
         }
 
@@ -27,7 +27,6 @@ export default async function UpdateUser(newUserData = {}, userId = 0) {
             message: "Update user success!",
             data: isUser.data.dataValues,
         };
-
     } catch (error) {
         console.log("Đã xảy ra lỗi khi cập nhập user: ", error.message);
         return {

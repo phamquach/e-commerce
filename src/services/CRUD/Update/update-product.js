@@ -4,7 +4,7 @@ export default async function UpdateProduct(productId, newProductData) {
     try {
         // Check product in database
         const isProduct = await ReadProduct.getOneProduct(productId);
-        if (!Boolean(isProduct.data)) {
+        if (!isProduct.data) {
             return isProduct;
         }
 

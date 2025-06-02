@@ -29,7 +29,7 @@ export default async function CreateUser(userData) {
                 ],
             },
         });
-        if (Boolean(isUser)) {
+        if (isUser) {
             return {
                 status: 409,
                 message: "Email or phone number already exist!",
